@@ -2,11 +2,11 @@ cmake_minimum_required(VERSION 3.12)
 
 option(CHECK_DOXYGEN "enable doc generation" ON)
 
-set(APP_NAME print-ip)
+set(PROJECTNAME print-ip)
 if (DEFINED ENV{TRAVIS_BUILD_NUMBER})
-    project(${APP_NAME} VERSION 0.0.$ENV{TRAVIS_BUILD_NUMBER})
+    project(${PROJECTNAME} VERSION 0.0.$ENV{TRAVIS_BUILD_NUMBER})
 else()
-    project(${APP_NAME} VERSION 0.0.1)
+    project(${PROJECTNAME} VERSION 0.0.1)
 endif()
 
 configure_file(version.h.in version.h)
@@ -23,17 +23,28 @@ if (${CHECK_DOXYGEN} STREQUAL ON)
     endif()
 endif()
 
-add_executable(${APP_NAME} main.cxx)
+add_executable(${PROJECTNAME} main.cxx)
 
-set_target_properties(${APP_NAME} PROPERTIES
+set_target_properties(${PROJECTNAME}
+  PROPERTIES
     CXX_STANDARD 17
     CXX_STANDARD_REQUIRED ON
 )
 
-target_include_directories(${APP_NAME} PRIVATE ${CMAKE_BINARY_DIR})
-#target_compile_options(${APP_NAME} PRIVATE -Wall -Wpedantic -Wextra -Werror)
+target_include_directories(${PROJECTNAME}
+  PRIVATE ${CMAKE_BINARY_DIR})
 
-install(TARGETS ${APP_NAME} RUNTIME DESTINATION bin)
+if(MSVC)
+    target_compile_options(${PROJECTNAME} PRIVATE
+        /W4
+    )
+else()
+    target_compile_options(${PROJECTNAME} PRIVATE
+        -Werror -Wall -Wimplicit-fallthrough -pedantic-errors
+    )
+endif()
+
+install(TARGETS ${PROJECTNAME} RUNTIME DESTINATION bin)
 
 set(CPACK_GENERATOR DEB)
 
