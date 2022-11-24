@@ -3,11 +3,11 @@ cmake_minimum_required(VERSION 3.12)
 option(CHECK_DOXYGEN "enable doc generation" ON)
 
 set(PROJECTNAME print-ip)
-if (DEFINED ENV{TRAVIS_BUILD_NUMBER})
-    project(${PROJECTNAME} VERSION 0.0.$ENV{TRAVIS_BUILD_NUMBER})
-else()
-    project(${PROJECTNAME} VERSION 0.0.1)
-endif()
+
+set(PATCH_VERSION "1" CACHE INTERNAL "Patch version")
+set(PROJECT_VESRION 0.0.${PATCH_VERSION})
+
+project(${PROJECTNAME} VERSION ${PROJECT_VESRION})
 
 configure_file(version.h.in version.h)
 

@@ -50,27 +50,14 @@ struct IP<T, typename std::enable_if<is_tuple<T>::value>::type> {
 };
 
 /**
- * @brief явная специализация шаблона структуры IP для std::vector
+ * @brief явная специализация шаблона структуры IP для
+ *  контейнеров std::vector или std::list
  */
-template <typename T>
+template<typename T>
 struct IP<T, typename std::enable_if<
-    std::is_same<std::vector<typename T::value_type>,T>::value>::type> {
-
-  static constexpr void print(T&& value) {
-    for(auto it = value.cbegin(); it != value.cend(); ++it) {
-      std::cout << ( it != value.cbegin() ? "." : "") << *it;
-    }
-    std::cout << std::endl;
-  }
-};
-
-/**
- * @brief явная специализация шаблона структуры IP для std::list
- */
-template <typename T>
-struct IP<T, typename std::enable_if<
-    std::is_same<std::list<typename T::value_type>, T>::value>::type> {
-
+    std::is_same<std::list<typename T::value_type>, T>::value
+      || std::is_same<std::vector<typename T::value_type>, T>::value
+    >::type> {
   static constexpr void print(T&& value) {
     for(auto it = value.cbegin(); it != value.cend(); ++it) {
       std::cout << ( it != value.cbegin() ? "." : "") << *it;
